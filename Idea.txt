@@ -1,0 +1,2 @@
+* Watch all new unwatched Jira tickets
+* Send an email with the title and description of new Jira tickets.
