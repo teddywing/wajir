@@ -7,16 +7,20 @@
   ;; Send email to ^maildir^program^ containing message with issue metadata
   ;; Continue to next page
 
-  (let* ((config (make-instance 'config
+  (let ((config (make-instance 'config
                                 :login "name@example.com"
                                 :token "atlassian-token"
                                 :endpoint "example.atlassian.net"
-                                :jql "project = \"FAKE\" AND watcher != currentUser() AND key > \"FAKE-100\" ORDER BY created DESC"))
-         (basic-auth-token (cl-base64:string-to-base64-string
-                             (format nil
-                                     "~A:~A"
-                                     (login config)
-                                     (token config)))))
+                                :jql "project = \"FAKE\" AND watcher != currentUser() AND key > \"FAKE-100\" ORDER BY created DESC")))
+
+    (run config)))
+
+(defun run (config)
+  (let ((basic-auth-token (cl-base64:string-to-base64-string
+                            (format nil
+                                    "~A:~A"
+                                    (login config)
+                                    (token config)))))
 
     (fetch-issues
       (endpoint config)
