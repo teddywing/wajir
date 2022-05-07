@@ -1,14 +1,7 @@
-; (push
-;   (merge-pathnames "lib/" (asdf:system-source-directory :wajir))
-;   asdf:*central-registry*)
-
 (in-package :asdf-user)
 
-; (initialize-source-registry
-;   '(:source-registry
-;     (:tree (merge-pathnames "lib/" (system-source-directory :wajir)))
-;   :inherit-configuration))
-
+;; Include the repo "lib/" directory in the system search path to make
+;; available systems tracked as submodules.
 (initialize-source-registry
   `(:source-registry
     (:tree ,(make-pathname :directory
