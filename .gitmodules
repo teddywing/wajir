@@ -1,0 +1,3 @@
+[submodule "lib/jzon"]
+	path = lib/jzon
+	url = https://github.com/Zulu-Inuoe/jzon.git
