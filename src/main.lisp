@@ -7,17 +7,25 @@
   ;; Send email to ^maildir^program^ containing message with issue metadata
   ;; Continue to next page
 
-  (let ((basic-auth-token (cl-base64:string-to-base64-string
-                            (format nil "~A:~A" "name@example.com" "atlassian-token"))))
+  (let* ((config (make-instance 'config
+                                :login "name@example.com"
+                                :token "atlassian-token"
+                                :endpoint "example.atlassian.net"
+                                :jql "project = \"FAKE\" AND watcher != currentUser() AND key > \"FAKE-100\" ORDER BY created DESC"))
+         (basic-auth-token (cl-base64:string-to-base64-string
+                             (format nil
+                                     "~A:~A"
+                                     (login config)
+                                     (token config)))))
 
     (fetch-issues
-      "https://example.atlassian.net"
-      "project = \\\"FAKE\\\" AND watcher != currentUser() AND key > \\\"FAKE-100\\\" ORDER BY created DESC"
+      (endpoint config)
+      (jql config)
       :basic-auth-token basic-auth-token)))
 
 (defun fetch-issues (endpoint jql &key basic-auth-token)
   (jzon:parse
-    (dex:post (format nil "~A/rest/api/3/search" endpoint)
+    (dex:post (format nil "https://~A/rest/api/3/search" endpoint)
               :content
               (jzon:stringify
                 `((:jql . ,jql)
