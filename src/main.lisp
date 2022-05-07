@@ -32,7 +32,9 @@
              (max-results (gethash "maxResults" response))
              (total (gethash "total" response)))
 
-        (watch-issues (gethash "issues" response))
+        (loop for issue
+              across (gethash "issues" response)
+              do (watch-issue issue))
 
         ;; Stop looping if we're on the last page of results.
         (when (> start-at
@@ -50,6 +52,5 @@
                          (:authorization
                           . ,(format nil "Basic ~A" basic-auth-token))))))
 
-(defun watch-issues (issues)
-  (loop for issue across issues do
-    (format t "Watching issue ~A~%" (gethash "key" issue))))
+(defun watch-issue (issue)
+  (format t "Watching issue ~A~%" (gethash "key" issue)))
