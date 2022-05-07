@@ -12,7 +12,8 @@
 
 (defsystem wajir
   :version "0.0.1"
-  :depends-on (:com.inuoe.jzon
+  :depends-on (:cl-base64
+               :com.inuoe.jzon
                :dexador)
   :components ((:module "src"
                 :serial t
