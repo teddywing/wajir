@@ -32,6 +32,11 @@
              (max-results (gethash "maxResults" response))
              (total (gethash "total" response)))
 
+        (format t "start-at: ~A max-results: ~A total: ~A~%"
+                start-at
+                max-results
+                total)
+
         (loop for issue
               across (gethash "issues" response)
               do (watch-issue issue))
