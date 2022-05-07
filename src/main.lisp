@@ -15,11 +15,9 @@
   (jzon:parse
     (dex:post "https://example.atlassian.net/rest/api/3/search"
               :content
-              (format nil "{
-                      \"jql\": \"~A\",
-                      \"fields\": [\"id\", \"key\", \"self\"]
-                      }"
-                      jql)
+              (jzon:stringify
+                `((:jql . ,jql)
+                  (fields . ("id" "key" "self"))))
               :headers `((:content-type . "application/json")
                          (:authorization
                           . ,(format nil "Basic ~A" basic-auth-token))))))
