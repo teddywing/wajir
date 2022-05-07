@@ -8,12 +8,13 @@
   ;; Continue to next page
 
   (fetch-issues
+    "https://example.atlassian.net"
     "project = \\\"FAKE\\\" AND watcher != currentUser() AND key > \\\"FAKE-100\\\" ORDER BY created DESC"
     :basic-auth-token "TOKEN"))
 
-(defun fetch-issues (jql &key basic-auth-token)
+(defun fetch-issues (endpoint jql &key basic-auth-token)
   (jzon:parse
-    (dex:post "https://example.atlassian.net/rest/api/3/search"
+    (dex:post (format nil "~A/rest/api/3/search" endpoint)
               :content
               (jzon:stringify
                 `((:jql . ,jql)
