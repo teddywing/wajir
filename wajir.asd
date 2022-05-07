@@ -1,6 +1,25 @@
-(asdf:defsystem wajir
+; (push
+;   (merge-pathnames "lib/" (asdf:system-source-directory :wajir))
+;   asdf:*central-registry*)
+
+(in-package :asdf-user)
+
+; (initialize-source-registry
+;   '(:source-registry
+;     (:tree (merge-pathnames "lib/" (system-source-directory :wajir)))
+;   :inherit-configuration))
+
+(initialize-source-registry
+  `(:source-registry
+    (:tree ,(make-pathname :directory
+                           (append
+                             (pathname-directory *load-pathname*)
+                             '("lib"))))
+    :inherit-configuration))
+
+(defsystem wajir
   :version "0.0.1"
-  :depends-on (:cl-smtp
+  :depends-on (:com.inuoe.jzon
                :dexador)
   :components ((:module "src"
                 :serial t
@@ -12,5 +31,5 @@
   :entry-point "wajir")
 
 #+sb-core-compression
-(defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
-  (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
+(defmethod perform ((o image-op) (c system))
+  (uiop:dump-image (output-file o c) :executable t :compression t))
