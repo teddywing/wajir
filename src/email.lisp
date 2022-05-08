@@ -6,7 +6,6 @@
 
     (with-open-stream (sendmail-input (make-string-input-stream message))
       (uiop:run-program (sendmail config)
-                        :output "/tmp/wajir.output"
                         :input sendmail-input))))
 
 (defun build-email (config issue output-stream)
