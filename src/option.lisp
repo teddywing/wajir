@@ -113,12 +113,12 @@ with code `exit-code`."
     ;; If `sendmail` is given, `email-to` must be defined.
     (when (not (null (getf options :sendmail)))
       (when (null (getf options  :email-to))
-        (format *error-output* "error: `--sendmail' requires `--email-to'")
+        (format *error-output* "error: `--sendmail' requires `--email-to'~%")
         (opts:exit sysexits:+usage+)))
 
     ;; Error if JQL is empty
     (when (null free-args)
-      (format *error-output* "error: missing JQL")
+      (format *error-output* "error: missing JQL~%")
 
       (opts:exit sysexits:+usage+))
 
