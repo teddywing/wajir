@@ -1,8 +1,6 @@
-(in-package :asdf-user)
-
 ;; Include the repo "lib/" directory in the system search path to make
 ;; available systems tracked as submodules.
-(initialize-source-registry
+(asdf:initialize-source-registry
   `(:source-registry
     (:tree ,(make-pathname :directory
                            (append
@@ -10,7 +8,7 @@
                              '("lib"))))
     :inherit-configuration))
 
-(defsystem wajir
+(asdf:defsystem wajir
   :version "0.0.1"
   :depends-on (:cl-base64
                :cl-smtp
@@ -28,5 +26,5 @@
   :entry-point "wajir")
 
 #+sb-core-compression
-(defmethod perform ((o image-op) (c system))
-  (uiop:dump-image (output-file o c) :executable t :compression t))
+(defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
+  (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
