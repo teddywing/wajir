@@ -66,13 +66,14 @@
               :content
               (jzon:stringify
                 `((:jql . ,jql)
-                  (:fields . ("id"
-                              "key"
-                              "project"
-                              "summary"
-                              "description"
-                              "issuetype"
-                              "reporter"))
+                  (:fields . #("id"
+                               "key"
+                               "project"
+                               "summary"
+                               "description"
+                               "issuetype"
+                               "creator"
+                               "reporter"))
                   (:|startAt| . ,start-at)))
               :headers `((:content-type . "application/json")
                          (:authorization
@@ -83,4 +84,4 @@
   ;; 2. Send email
   (format t "Watching issue ~A~%" (gethash "key" issue))
 
-  (deliver-email (email-to config) issue))
+  (deliver-email config issue))

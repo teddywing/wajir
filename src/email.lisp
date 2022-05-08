@@ -1,12 +1,12 @@
 (in-package :wajir)
 
-(defun deliver-email (recipient issue)
+(defun deliver-email (config issue)
   (cl-smtp:write-rfc8822-message
     *standard-output*
     (format nil "wajir@~A" (uiop:hostname))
-    `(,recipient)
+    `(,(email-to config))
     (format-subject issue)
-    (format-description issue)))
+    (format-body issue (endpoint config))))
 
 (defun format-subject (issue)
   (format nil
@@ -15,6 +15,23 @@
           (gethash "summary"
                    (gethash "fields" issue))))
 
-(defun format-description (issue)
-  (gethash "description"
-           (gethash "fields" issue)))
+(defun format-body (issue endpoint)
+  (let ((fields (gethash "fields" issue)))
+    (format nil
+            "~A created ~A:~%~%Summary: ~A~%Key: ~A~%URL: ~A~%Project: ~A~%Issue Type: ~A~%Reporter: ~A~%~%~%~A"
+            (gethash "displayName"
+                     (gethash "creator" fields))
+            (gethash "key" issue)
+            (gethash "summary" fields)
+            (gethash "key" issue)
+            (format nil
+                    "https://~A/browse/~A"
+                    endpoint
+                    (gethash "key" issue))
+            (gethash "name"
+                     (gethash "project" fields))
+            (gethash "name"
+                     (gethash "issuetype" fields))
+            (gethash "displayName"
+                     (gethash "reporter" fields))
+            (gethash "description" fields))))
