@@ -46,7 +46,10 @@
           ;       across (gethash "issues" response)
           ;       do (watch-issue config issue))
           (let ((issue (aref (gethash "issues" response) 0)))
-            (watch-issue config issue)
+            (watch-issue
+              config
+              issue
+              :basic-auth-token basic-auth-token)
 
             (return))
 
@@ -79,10 +82,24 @@
                          (:authorization
                           . ,(format nil "Basic ~A" basic-auth-token))))))
 
-(defun watch-issue (config issue)
+(defun watch-issue (config issue &key basic-auth-token)
   ;; 1. Watch issue in Jira
   ;; 2. Send email
   (format t "Watching issue ~A~%" (gethash "key" issue))
 
+  (add-watcher
+    (endpoint config)
+    issue
+    :basic-auth-token basic-auth-token)
+
   (if (sendmail config)
       (deliver-email config issue)))
+
+(defun add-watcher (endpoint issue &key basic-auth-token)
+  "Add the authenticated user as a watcher to issue."
+  (dex:post
+    (format nil
+            "https://~A/rest/api/2/issue/~A/watchers"
+            endpoint
+            (gethash "id" issue))
+    :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token)))))
