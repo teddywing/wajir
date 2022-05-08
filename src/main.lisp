@@ -68,4 +68,6 @@
                           . ,(format nil "Basic ~A" basic-auth-token))))))
 
 (defun watch-issue (issue)
+  ;; 1. Watch issue in Jira
+  ;; 2. Send email
   (format t "Watching issue ~A~%" (gethash "key" issue)))
