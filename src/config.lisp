@@ -33,3 +33,10 @@
      :initarg :jql
      :reader jql
      :documentation "JQL querying issues to watch")))
+
+(defmethod print-object ((object config) stream)
+  (with-slots (login token endpoint sendmail email-to verbose jql) object
+    (print-unreadable-object (object stream :type t)
+      (format stream
+              ":login ~S :token ~S :endpoint ~S :sendmail ~S :email-to ~S :verbose ~S :jql ~S"
+              login token endpoint sendmail email-to verbose jql))))
