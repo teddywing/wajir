@@ -14,15 +14,18 @@
   (:name :endpoint
    :description "Jira site URL host (e.g. example.atlassian.net)"
    :long "endpoint"
+   :arg-parser #'identity
    :meta-var "<endpoint>")
 
   (:name :sendmail
    :description "send email command"
    :long "sendmail"
+   :arg-parser #'identity
    :meta-var "<command>")
   (:name :email-to
    :description "recipient email address"
    :long "email-to"
+   :arg-parser #'identity
    :meta-var "<address>")
 
   (:name :verbose
