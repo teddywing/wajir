@@ -36,10 +36,11 @@
 
                (total (gethash "total" response)))
 
-          (format t "start-at: ~A max-results: ~A total: ~A~%"
-                  start-at
-                  max-results
-                  total)
+          (when (verbose config)
+            (format t "start-at: ~A max-results: ~A total: ~A~%"
+                    start-at
+                    max-results
+                    total))
 
           ;; Watch each issue.
           ; (loop for issue
@@ -85,7 +86,8 @@
 (defun watch-issue (config issue &key basic-auth-token)
   ;; 1. Watch issue in Jira
   ;; 2. Send email
-  (format t "Watching issue ~A~%" (gethash "key" issue))
+  (when (verbose config)
+    (format t "Watching issue ~A~%" (gethash "key" issue)))
 
   (add-watcher
     (endpoint config)

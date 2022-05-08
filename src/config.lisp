@@ -18,11 +18,16 @@
      :initarg :sendmail
      :reader sendmail
      :documentation "Email sending client command")
-
    (email-to
      :initarg :email-to
      :reader email-to
      :documentation "Email recipient")
+
+   (verbose
+     :initarg :verbose
+     :initform nil
+     :reader verbose
+     :documentation "Turn on verbose output")
 
    (jql
      :initarg :jql
