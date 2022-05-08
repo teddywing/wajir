@@ -61,7 +61,13 @@
               :content
               (jzon:stringify
                 `((:jql . ,jql)
-                  (:fields . ("id" "key" "self"))
+                  (:fields . ("id"
+                              "key"
+                              "project"
+                              "summary"
+                              "description"
+                              "issuetype"
+                              "reporter"))
                   (:|startAt| . ,start-at)))
               :headers `((:content-type . "application/json")
                          (:authorization
