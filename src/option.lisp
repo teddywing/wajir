@@ -99,12 +99,13 @@ with code `exit-code`."
                              #'(lambda (missing-and-opt) (first missing-and-opt))
                              opts-missing-p))))
 
-      (format
-        *error-output*
-        "error: missing required options: ~{`~(--~A~)'~^, ~}~%"
-        missing-opts)
+      (when (not (null missing-opts))
+        (format
+          *error-output*
+          "error: missing required options: ~{`~(--~A~)'~^, ~}~%"
+          missing-opts)
 
-      (opts:exit sysexits:+usage+))
+        (opts:exit sysexits:+usage+)))
 
     ;; If `sendmail` is given, `email-to` must be defined.
     (when (not (null (getf options :sendmail)))
