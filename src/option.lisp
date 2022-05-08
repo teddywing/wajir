@@ -82,6 +82,84 @@ with code `exit-code`."
 
       (opts:exit sysexits:+ok+))
 
+    ;; Check required arguments
+    ; (dolist (opt '(:login :token :endpoint))
+    ;   ())
+    ; (when (null (getf options :login))
+    ;   (format *error-output* "~S" 
+    ;           (loop
+    ;             for opt in '(:login :token :endpoint)
+    ;             with  '(opt (null (getf options opt)))
+                ; collect result))
+    ; (when (null (getf options :login))
+    ;   (let ((required-opts
+    ;           (mapcar
+    ;             #'(lambda (opt) `(,opt ,(not (null (getf options opt)))))
+    ;             '(:login :token :endpoint))))
+    ;        (format *error-output* "opts: ~S" required-opts)
+    ;        (opts:exit sysexits:+usage+)))
+    ; (when (or (null (getf options :login))
+    ;           (null (getf options :token))
+    ;           (null (getf options :endpoint)))
+    ;  (format *error-output* "error: missing required options: ~A"))
+
+    ; (let* ((required-opts '(:login :token :endpoint))
+    ;        (opts-missing-p (mapcar
+    ;                          #'(lambda (opt) (null (getf options opt)))
+    ;                          required-opts)))
+    ;        ; (opts-missing-p (mapcar
+    ;        ;                   #'(lambda (opt)
+    ;        ;                       (cons (null (getf options opt))
+    ;        ;                             opt))
+    ;        ;                   required-opts))
+    ;        ; (missing-opts (mapcar
+    ;        ;                 #'second
+    ;        ;                 (remove-if-not
+    ;        ;                   #'(lambda (missing-and-opt) (first missing-and-opt))
+    ;        ;                       opts-missing-p))))
+    ;
+    ;   (format *error-output* "miss: ~S~%" opts-missing-p)
+    ;   (when (or (values opts-missing-p))
+    ;     (let* ((opt-and-presence
+    ;              (mapcar #'cons opts-missing-p required-opts))
+    ;            (missing-opts
+    ;              (remove-if
+    ;                #'(lambda (presence-pair) (null (first presence-pair)))
+    ;                opt-and-presence)))
+    ;
+    ;       (format *error-output* "opts: ~S~%" missing-opts)
+    ;       (opts:exit sysexits:+usage+))))
+    ;
+    ;   ; (format *error-output* "v2: ~S~%" missing-opts))
+
+    (let* ((required-opts '(:login :token :endpoint))
+
+           ;; (nil nil t)
+           ; (opts-missing-p (mapcar
+           ;                   #'(lambda (opt) (null (getf options opt)))
+           ;                   required-opts))
+
+           ;; ((t . :login) (t . :token) (nil . :endpoint))
+           (opts-missing-p (mapcar
+                             #'(lambda (opt)
+                                 (cons (null (getf options opt))
+                                       opt))
+                             required-opts))
+
+           ;; (:endpoint)
+           (missing-opts (mapcar
+                           #'cdr
+                           (remove-if-not
+                             #'(lambda (missing-and-opt) (first missing-and-opt))
+                             opts-missing-p))))
+
+      (format
+        *error-output*
+        "error: missing required options: ~{`~(--~A~)'~^, ~}~%"
+        missing-opts)
+
+      (opts:exit sysexits:+usage+))
+
     ;; If `sendmail` is given, `email-to` must be defined.
     (when (not (null (getf options :sendmail)))
       (when (null (getf options  :email-to))
