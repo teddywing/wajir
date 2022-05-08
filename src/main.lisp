@@ -23,36 +23,45 @@
                                     (token config)))))
 
     (loop
-      (let* ((response (fetch-issues
-                         (endpoint config)
-                         (jql config)
-                         :basic-auth-token basic-auth-token))
+      with start-at = 0
+      with max-results = 0
+      do
+      (progn
+        (let* ((response (fetch-issues
+                           (endpoint config)
+                           (jql config)
+                           start-at
+                           :basic-auth-token basic-auth-token))
 
-             (start-at (gethash "startAt" response))
-             (max-results (gethash "maxResults" response))
-             (total (gethash "total" response)))
+               (total (gethash "total" response)))
 
-        (format t "start-at: ~A max-results: ~A total: ~A~%"
-                start-at
-                max-results
-                total)
+          (format t "start-at: ~A max-results: ~A total: ~A~%"
+                  start-at
+                  max-results
+                  total)
 
-        (loop for issue
-              across (gethash "issues" response)
-              do (watch-issue issue))
+          (loop for issue
+                across (gethash "issues" response)
+                do (watch-issue issue))
 
-        ;; Stop looping if we're on the last page of results.
-        (when (> start-at
-                 (- total max-results))
-          (return))))))
+          ;; Stop looping if we're on the last page of results.
+          (when (> start-at
+                   (- total max-results))
+            (return))
 
-(defun fetch-issues (endpoint jql &key basic-auth-token)
+          ;; Step `start-at` for next page.
+          (setf max-results (gethash "maxResults" response))
+          (setf start-at (+ (gethash "startAt" response)
+                            max-results)))))))
+
+(defun fetch-issues (endpoint jql start-at &key basic-auth-token)
   (jzon:parse
     (dex:post (format nil "https://~A/rest/api/3/search" endpoint)
               :content
               (jzon:stringify
                 `((:jql . ,jql)
-                  (fields . ("id" "key" "self"))))
+                  (:fields . ("id" "key" "self"))
+                  (:|startAt| . ,start-at)))
               :headers `((:content-type . "application/json")
                          (:authorization
                           . ,(format nil "Basic ~A" basic-auth-token))))))
