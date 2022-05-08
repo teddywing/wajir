@@ -1,8 +1,17 @@
 (in-package :wajir)
 
 (defun deliver-email (config issue)
+  (let ((message (with-output-to-string (message-stream)
+                   (build-email config issue message-stream))))
+
+    (with-open-stream (sendmail-input (make-string-input-stream message))
+      (uiop:run-program (sendmail config)
+                        :output "/tmp/wajir.output"
+                        :input sendmail-input))))
+
+(defun build-email (config issue output-stream)
   (cl-smtp:write-rfc8822-message
-    *standard-output*
+    output-stream
     (format nil "wajir@~A" (uiop:hostname))
     `(,(email-to config))
     (format-subject issue)

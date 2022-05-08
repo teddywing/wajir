@@ -14,6 +14,11 @@
      :reader endpoint
      :documentation "Jira site URL (e.g. example.atlassian.net)")
 
+   (sendmail
+     :initarg :sendmail
+     :reader sendmail
+     :documentation "Email sending client command")
+
    (email-to
      :initarg :email-to
      :reader email-to

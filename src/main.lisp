@@ -84,4 +84,5 @@
   ;; 2. Send email
   (format t "Watching issue ~A~%" (gethash "key" issue))
 
-  (deliver-email config issue))
+  (if (sendmail config)
+      (deliver-email config issue)))
