@@ -40,6 +40,7 @@
                   max-results
                   total)
 
+          ;; Watch each issue.
           (loop for issue
                 across (gethash "issues" response)
                 do (watch-issue issue))
