@@ -1,3 +1,6 @@
 [submodule "lib/jzon"]
 	path = lib/jzon
 	url = https://github.com/Zulu-Inuoe/jzon.git
+[submodule "lib/sysexits"]
+	path = lib/sysexits
+	url = https://github.com/teddywing/cl-sysexits.git
