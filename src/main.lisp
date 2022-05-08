@@ -11,6 +11,7 @@
                                 :login "name@example.com"
                                 :token "atlassian-token"
                                 :endpoint "example.atlassian.net"
+                                :email-to "name@example.com"
                                 :jql "project = \"FAKE\" AND watcher != currentUser() AND key > \"FAKE-100\" ORDER BY created DESC")))
 
     (run config)))
@@ -41,9 +42,13 @@
                   total)
 
           ;; Watch each issue.
-          (loop for issue
-                across (gethash "issues" response)
-                do (watch-issue issue))
+          ; (loop for issue
+          ;       across (gethash "issues" response)
+          ;       do (watch-issue config issue))
+          (let ((issue (aref (gethash "issues" response) 0)))
+            (watch-issue config issue)
+
+            (return))
 
           ;; Stop looping if we're on the last page of results.
           (when (> start-at
@@ -73,7 +78,9 @@
                          (:authorization
                           . ,(format nil "Basic ~A" basic-auth-token))))))
 
-(defun watch-issue (issue)
+(defun watch-issue (config issue)
   ;; 1. Watch issue in Jira
   ;; 2. Send email
-  (format t "Watching issue ~A~%" (gethash "key" issue)))
+  (format t "Watching issue ~A~%" (gethash "key" issue))
+
+  (deliver-email (email-to config) issue))

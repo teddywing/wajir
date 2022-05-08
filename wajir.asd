@@ -13,12 +13,14 @@
 (defsystem wajir
   :version "0.0.1"
   :depends-on (:cl-base64
+               :cl-smtp
                :com.inuoe.jzon
                :dexador)
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")
                              (:file "config")
+                             (:file "email")
                              (:file "main"))))
 
   :build-operation "program-op"

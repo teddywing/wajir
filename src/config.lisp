@@ -13,6 +13,12 @@
      :initarg :endpoint
      :reader endpoint
      :documentation "Jira site URL (e.g. example.atlassian.net)")
+
+   (email-to
+     :initarg :email-to
+     :reader email-to
+     :documentation "Email recipient")
+
    (jql
      :initarg :jql
      :reader jql
