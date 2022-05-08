@@ -1,0 +1,32 @@
+wajir(1)
+========
+
+NAME
+----
+wajir - Watch Jira issues
+
+SYNOPSIS
+--------
+'wajir' TODO
+
+DESCRIPTION
+-----------
+
+OPTIONS
+-------
+--login::
+	Jira login email address.
+
+--token::
+	Jira API token. Obtained from: TODO
+
+--endpoint::
+--sendmail::
+--email-to::
+--verbose::
+
+-h, --help::
+	Print usage help.
+
+-V, --version::
+	Print the program version.
