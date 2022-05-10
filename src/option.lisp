@@ -81,7 +81,7 @@ with code `exit-code`."
 
     ;; Version
     (when-option (options :version)
-      (format t "~a~%" (asdf:component-version (asdf:find-system :extreload)))
+      (format t "~a~%" (asdf:component-version (asdf:find-system :wajir)))
 
       (opts:exit sysexits:+ok+))
 
