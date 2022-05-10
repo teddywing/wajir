@@ -7,7 +7,10 @@ wajir - Watch Jira issues
 
 SYNOPSIS
 --------
-'wajir' TODO
+[verse]
+'wajir' [--login <login>] [--token <token>] [--endpoint <endpoint>]
+	[--sendmail <command>] [--email-to <address>] [-v | --verbose]
+	[-h | --help] [-V | --version] <JQL>
 
 DESCRIPTION
 -----------
