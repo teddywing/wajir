@@ -25,17 +25,17 @@ OPTIONS
 	https://id.atlassian.com/manage-profile/security/api-tokens
 
 --endpoint::
-	The team-specific Atlassian host (e.g. 'example.atlassian.net').
+	The team-specific Atlassian host (e.g. *example.atlassian.net*).
 
 --sendmail::
-	The command named in this argument will be exec'ed and given an email on
+	The command named in this argument will be exec'ed and given an email on its
 	standard input. This will typically be a Mail Transfer Agent or Mail
-	Delivery Agent.
+	Delivery Agent. If set, the *--email-to* option must also be set.
 
 --email-to::
-	Recipient email address that 'issue created' emails will be sent to.
+	Recipient email address that `issue created' emails will be sent to.
 
---verbose::
+-v, --verbose::
 	Turn on verbose output.
 
 -h, --help::
