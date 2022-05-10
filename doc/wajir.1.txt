@@ -14,6 +14,20 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
+Automatically watch Jira issues. Given a JQL query, the currently authenticated
+user will be added as a watcher on all resulting issues.
+
+For example, this JQL query finds all issues in the project "FAKE" that are not
+watched by the current user:
+
+	project = "FAKE" AND watcher != currentUser() ORDER BY created ASC
+
+Passing the above JQL to Wajir will cause the current user to watch all
+unwatched issues in the "FAKE" project.
+
+If the *--sendmail* and *--email-to* options are provided, an email containing
+the issue summary, description, and a few other metadata fields will be sent
+using the program given in *--sendmail* to the *--email-to* address.
 
 OPTIONS
 -------
