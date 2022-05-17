@@ -6,7 +6,19 @@ user will be added as a watcher on all resulting issues.
 
 
 ## Usage
-TODO
+The following command adds ‘jira-user@example.com’ as a watcher on all Jira
+issues in the “FAKE” project that are not already watched by that user.
+Additionally, an email will be delivered to ‘jira-user@example.com’ using the
+`/usr/local/bin/maildrop` program for each of those issues, containing the issue
+summary, metadata, and description.
+
+	$ wajir \
+		--login 'jira-user@example.com' \
+		--token 'jp3cy1PFmDiCw73JJO6YL9Dj' \
+		--endpoint 'example.atlassian.net' \
+		--sendmail '/usr/local/bin/maildrop' \
+		--email-to 'jira-user@example.com' \
+		'project = "FAKE" AND watcher != currentUser() ORDER BY created ASC'
 
 
 ## Install
