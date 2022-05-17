@@ -20,6 +20,9 @@ summary, metadata, and description.
 		--email-to 'jira-user@example.com' \
 		'project = "FAKE" AND watcher != currentUser() ORDER BY created ASC'
 
+The program is designed to run at a recurring interval (via `cron` or `launchd`
+for example).
+
 
 ## Install
 TODO
