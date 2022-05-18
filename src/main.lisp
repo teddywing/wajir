@@ -8,6 +8,8 @@
   ;; Send email to program containing message with issue metadata
   ;; Continue to next page
 
+  ;; TODO: Add SIGINT and error handling
+
   (let ((config (parse-options)))
     (run config)))
 
