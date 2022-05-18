@@ -2,9 +2,8 @@
 
 (defun main ()
   ;; Query page of issues
-  ;; [Check not in database?] <- no
   ;; Start watching issue
-  ;; Send email to ^maildir^program^ containing message with issue metadata
+  ;; Send email to program containing message with issue metadata
   ;; Continue to next page
 
   (let ((config (parse-options)))
