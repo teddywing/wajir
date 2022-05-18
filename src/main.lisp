@@ -7,17 +7,7 @@
   ;; Continue to next page
 
   (let ((config (parse-options)))
-    (format t "~S" config))
-
-  ; (let ((config (make-instance 'config
-  ;                               :login "name@example.com"
-  ;                               :token "atlassian-token"
-  ;                               :endpoint "example.atlassian.net"
-  ;                               :email-to "name@example.com"
-  ;                               :jql "project = \"FAKE\" AND watcher != currentUser() AND key > \"FAKE-100\" ORDER BY created DESC")))
-  ;
-  ;   (run config))
-    )
+    (run config)))
 
 (defun run (config)
   (let ((basic-auth-token (cl-base64:string-to-base64-string
