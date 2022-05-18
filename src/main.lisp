@@ -40,16 +40,12 @@
                     total))
 
           ;; Watch each issue.
-          ; (loop for issue
-          ;       across (gethash "issues" response)
-          ;       do (watch-issue config issue))
-          (let ((issue (aref (gethash "issues" response) 0)))
-            (watch-issue
-              config
-              issue
-              :basic-auth-token basic-auth-token)
-
-            (return))
+          (loop for issue
+                across (gethash "issues" response)
+                do (watch-issue
+                     config
+                     issue
+                     :basic-auth-token basic-auth-token))
 
           ;; Stop looping if we're on the last page of results.
           (when (> start-at
@@ -86,10 +82,10 @@
   (when (verbose config)
     (format t "Watching issue ~A~%" (gethash "key" issue)))
 
-  ; (add-watcher
-  ;   (endpoint config)
-  ;   issue
-  ;   :basic-auth-token basic-auth-token)
+  (add-watcher
+    (endpoint config)
+    issue
+    :basic-auth-token basic-auth-token)
 
   (if (sendmail config)
       (deliver-email config issue)))
