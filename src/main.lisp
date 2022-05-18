@@ -1,5 +1,7 @@
 (in-package :wajir)
 
+(defparameter uiop:*lisp-interaction* nil)
+
 (defun main ()
   ;; Query page of issues
   ;; Start watching issue
