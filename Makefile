@@ -57,6 +57,6 @@ bundle/bundled-local-projects/0000/wajir/wajir: bundle
 
 
 .PHONY: install
-install:
+install: bundle/bundled-local-projects/0000/wajir/wajir $(MAN_PAGE)
 	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(PREFIX)/bin
 	install -m 755 $(MAN_PAGE) $(PREFIX)/share/man/man1
