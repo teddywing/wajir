@@ -15,7 +15,8 @@
                :com.inuoe.jzon
                :dexador
                :sysexits
-               :unix-opts)
+               :unix-opts
+               :with-user-abort)
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")

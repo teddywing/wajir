@@ -1,7 +1,5 @@
 (in-package :wajir)
 
-(defparameter uiop:*lisp-interaction* nil)
-
 (defun main ()
   ;; Query page of issues
   ;; Start watching issue
@@ -10,8 +8,31 @@
 
   ;; TODO: Add SIGINT and error handling
 
-  (let ((config (parse-options)))
-    (run config)))
+  ;; Disable interactive debugger.
+  ; (defparameter uiop:*lisp-interaction* nil)
+  (setf *debugger-hook* #'debug-ignore)
+
+  (handler-case
+      (interrupt:with-user-abort
+        (handler-bind ((error #'(lambda (e)
+                                  (exit-with-error e sysexits:+unavailable+))))
+
+  ; (let ((config (parse-options)))
+  ;   (run config))
+
+          (format t "l-i: ~S~%" uiop:*lisp-interaction*)
+          (format t "main ran~%")
+          (sleep 5)))
+
+    ;; Control-c
+    (interrupt:user-abort ()
+      (format t "siginted~%")
+      (opts:exit 130))))
+
+(defun debug-ignore (condition hook)
+  (declare (ignore hook))
+  (princ condition)
+  (abort))
 
 (defun run (config)
   (let ((basic-auth-token (cl-base64:string-to-base64-string
