@@ -78,6 +78,10 @@ with code `exit-code`."
 `condition` and exits with EX_USAGE."
   (exit-with-error condition sysexits:+usage+))
 
+(defmacro program-version ()
+  "Program version string"
+  (asdf:component-version (asdf:find-system :wajir)))
+
 (defun parse-options ()
   "Parse command line options."
   (multiple-value-bind (options free-args)
@@ -99,7 +103,7 @@ with code `exit-code`."
 
     ;; Version
     (when-option (options :version)
-      (format t "~a~%" (asdf:component-version (asdf:find-system :wajir)))
+      (format t "~a~%" (program-version))
 
       (opts:exit sysexits:+ok+))
 
