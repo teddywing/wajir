@@ -6,10 +6,7 @@
   ;; Send email to program containing message with issue metadata
   ;; Continue to next page
 
-  ;; TODO: Add SIGINT and error handling
-
   ;; Disable interactive debugger.
-  ; (defparameter uiop:*lisp-interaction* nil)
   (setf *debugger-hook* #'debug-ignore)
 
   (handler-case
@@ -17,16 +14,11 @@
         (handler-bind ((error #'(lambda (e)
                                   (exit-with-error e sysexits:+unavailable+))))
 
-  ; (let ((config (parse-options)))
-  ;   (run config))
-
-          (format t "l-i: ~S~%" uiop:*lisp-interaction*)
-          (format t "main ran~%")
-          (sleep 5)))
+          (let ((config (parse-options)))
+            (run config))))
 
     ;; Control-c
     (interrupt:user-abort ()
-      (format t "siginted~%")
       (opts:exit 130))))
 
 (defun debug-ignore (condition hook)
