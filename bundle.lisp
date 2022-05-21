@@ -1,6 +1,8 @@
 (setf ql:*local-project-directories* '("./lib"))
 
-(let ((dependencies (asdf:system-depends-on (asdf:find-system :wajir)))
+(let ((dependencies (append
+                      (asdf:system-depends-on (asdf:find-system :wajir))
+                      (asdf:system-depends-on (asdf:find-system :com.inuoe.jzon))))
       (local-dependencies '("com.inuoe.jzon"
                             "sysexits")))
   (ql:bundle-systems
