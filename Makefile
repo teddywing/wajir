@@ -20,6 +20,8 @@ PREFIX=/usr/local
 
 LISP ?= sbcl
 
+VERSION := $(shell fgrep ':version' wajir.asd | awk -F '"' '{ print $$2 }')
+
 MAN_PAGE := doc/wajir.1
 
 
@@ -54,6 +56,15 @@ bundle/bundled-local-projects/0000/wajir/wajir: bundle
 	$(LISP) --load bundle/bundle.lisp \
 		--eval '(asdf:make :wajir)' \
 		--eval '(quit)'
+
+
+.PHONY: pkg
+pkg: wajir_$(VERSION).tar.bz2
+
+wajir_$(VERSION).tar.bz2: bundle
+	git archive --output=wajir_$(VERSION).tar HEAD
+	tar -rf wajir_$(VERSION).tar bundle
+	bzip2 wajir_$(VERSION).tar
 
 
 .PHONY: install
