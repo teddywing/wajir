@@ -25,7 +25,17 @@ for example).
 
 
 ## Install
-TODO
+Mac OS X users can install with Homebrew:
+
+	$ brew install teddywing/formulae/wajir
+
+Or with MacPorts, after [adding a custom repository source][teddywing ports
+repository]:
+
+	$ sudo port install wajir
+
+
+[teddywing ports repository]: https://github.com/teddywing/macports-ports#adding-this-repository-source
 
 
 ## Build
