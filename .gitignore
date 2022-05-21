@@ -1,1 +1,5 @@
 *.fasl
+
+/bundle/
+/lib/wajir/
+system-index.txt

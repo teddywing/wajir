@@ -44,7 +44,19 @@ $(MAN_PAGE): doc/wajir.1.txt
 	a2x --no-xmllint --format manpage $<
 
 
+bundle: bundle.lisp
+	mkdir -p lib/wajir
+	cp -a wajir.asd src lib/wajir/
+
+	$(LISP) --load bundle.lisp
+
+bundle/bundled-local-projects/0000/wajir/wajir: bundle
+	$(LISP) --load bundle/bundle.lisp \
+		--eval '(asdf:make :wajir)' \
+		--eval '(quit)'
+
+
 .PHONY: install
 install:
-	install -m 755 wajir $(PREFIX)/bin
+	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(PREFIX)/bin
 	install -m 755 $(MAN_PAGE) $(PREFIX)/share/man/man1
