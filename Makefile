@@ -16,9 +16,15 @@
 # along with Wajir. If not, see <https://www.gnu.org/licenses/>.
 
 
+PREFIX=/usr/local
+
 LISP ?= sbcl
 
 MAN_PAGE := doc/wajir.1
+
+
+.PHONY: all
+all: wajir $(MAN_PAGE)
 
 
 .PHONY: build
@@ -36,3 +42,9 @@ doc: $(MAN_PAGE)
 
 $(MAN_PAGE): doc/wajir.1.txt
 	a2x --no-xmllint --format manpage $<
+
+
+.PHONY: install
+install:
+	install -m 755 wajir $(PREFIX)/bin
+	install -m 755 $(MAN_PAGE) $(PREFIX)/share/man/man1
