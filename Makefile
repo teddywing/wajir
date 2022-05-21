@@ -46,7 +46,7 @@ $(MAN_PAGE): doc/wajir.1.txt
 	a2x --no-xmllint --format manpage $<
 
 
-bundle: bundle.lisp
+bundle:
 	mkdir -p lib/wajir
 	cp -a wajir.asd src lib/wajir/
 
