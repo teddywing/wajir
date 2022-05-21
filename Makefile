@@ -61,7 +61,7 @@ bundle/bundled-local-projects/0000/wajir/wajir: bundle
 .PHONY: pkg
 pkg: wajir_$(VERSION).tar.bz2
 
-wajir_$(VERSION).tar.bz2: bundle
+wajir_$(VERSION).tar.bz2: bundle wajir.asd src/*.lisp
 	git archive --output=wajir_$(VERSION).tar HEAD
 	tar -rf wajir_$(VERSION).tar bundle
 	bzip2 wajir_$(VERSION).tar
