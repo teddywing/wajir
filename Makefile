@@ -16,6 +16,14 @@
 # along with Wajir. If not, see <https://www.gnu.org/licenses/>.
 
 
+prefix ?= /usr/local
+exec_prefix ?= $(prefix)
+bindir ?= $(exec_prefix)/bin
+datarootdir ?= $(prefix)/share
+mandir ?= $(datarootdir)/man
+man1dir ?= $(mandir)/man1
+
+
 LISP ?= sbcl
 
 VERSION := $(shell fgrep ':version' wajir.asd | awk -F '"' '{ print $$2 }')
@@ -73,7 +81,7 @@ wajir_$(VERSION).tar.bz2: bundle wajir.asd src/*.lisp
 
 .PHONY: install
 install: bundle/bundled-local-projects/0000/wajir/wajir $(MAN_PAGE)
-	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(DESTDIR)/bin
+	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(DESTDIR)$(bindir)/wajir
 
-	install -d $(DESTDIR)/share/man/man1
-	install -m 644 $(MAN_PAGE) $(DESTDIR)/share/man/man1
+	install -d $(DESTDIR)$(man1dir)
+	install -m 644 $(MAN_PAGE) $(DESTDIR)$(man1dir)/$(MAN_PAGE)
