@@ -16,8 +16,6 @@
 # along with Wajir. If not, see <https://www.gnu.org/licenses/>.
 
 
-PREFIX=/usr/local
-
 LISP ?= sbcl
 
 VERSION := $(shell fgrep ':version' wajir.asd | awk -F '"' '{ print $$2 }')
@@ -75,5 +73,5 @@ wajir_$(VERSION).tar.bz2: bundle wajir.asd src/*.lisp
 
 .PHONY: install
 install: bundle/bundled-local-projects/0000/wajir/wajir $(MAN_PAGE)
-	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(PREFIX)/bin
-	install -m 755 $(MAN_PAGE) $(PREFIX)/share/man/man1
+	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(DESTDIR)/bin
+	install -m 755 $(MAN_PAGE) $(DESTDIR)/share/man/man1
