@@ -62,8 +62,14 @@ bundle/bundled-local-projects/0000/wajir/wajir: bundle
 pkg: wajir_$(VERSION).tar.bz2
 
 wajir_$(VERSION).tar.bz2: bundle wajir.asd src/*.lisp
-	git archive --output=wajir_$(VERSION).tar HEAD
-	tar -rf wajir_$(VERSION).tar bundle
+	git archive \
+		--prefix=wajir_$(VERSION)/ \
+		--output=wajir_$(VERSION).tar \
+		HEAD
+	tar -r \
+		-s ,bundle,wajir_$(VERSION)/bundle, \
+		-f wajir_$(VERSION).tar \
+		bundle
 	bzip2 wajir_$(VERSION).tar
 
 
