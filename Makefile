@@ -74,4 +74,6 @@ wajir_$(VERSION).tar.bz2: bundle wajir.asd src/*.lisp
 .PHONY: install
 install: bundle/bundled-local-projects/0000/wajir/wajir $(MAN_PAGE)
 	install -m 755 bundle/bundled-local-projects/0000/wajir/wajir $(DESTDIR)/bin
-	install -m 755 $(MAN_PAGE) $(DESTDIR)/share/man/man1
+
+	install -d $(DESTDIR)/share/man/man1
+	install -m 644 $(MAN_PAGE) $(DESTDIR)/share/man/man1
