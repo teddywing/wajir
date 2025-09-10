@@ -90,7 +90,7 @@
 
 (defun fetch-issues (endpoint jql start-at &key basic-auth-token)
   (jzon:parse
-    (dex:post (format nil "https://~A/rest/api/2/search" endpoint)
+    (dex:post (format nil "https://~A/rest/api/3/search" endpoint)
               :content
               (jzon:stringify
                 `((:jql . ,jql)
@@ -125,7 +125,7 @@
   "Add the authenticated user as a watcher to issue."
   (dex:post
     (format nil
-            "https://~A/rest/api/2/issue/~A/watchers"
+            "https://~A/rest/api/3/issue/~A/watchers"
             endpoint
             (gethash "id" issue))
     :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token)))))
