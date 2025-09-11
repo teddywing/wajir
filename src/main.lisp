@@ -52,23 +52,17 @@
                                     (token config)))))
 
     (loop
-      with start-at = 0
-      with max-results = 0
+      with next-page-token = nil
       do
       (progn
         (let* ((response (fetch-issues
                            (endpoint config)
                            (jql config)
-                           start-at
-                           :basic-auth-token basic-auth-token))
-
-               (total (gethash "total" response)))
+                           next-page-token
+                           :basic-auth-token basic-auth-token)))
 
           (when (verbose config)
-            (format t "start-at: ~A max-results: ~A total: ~A~%"
-                    start-at
-                    max-results
-                    total))
+            (format t "next-page-token: ~A~%" next-page-token))
 
           ;; Watch each issue.
           (loop for issue
@@ -79,16 +73,13 @@
                      :basic-auth-token basic-auth-token))
 
           ;; Stop looping if we're on the last page of results.
-          (when (> start-at
-                   (- total max-results))
+          (when (gethash "isLast")
             (return))
 
-          ;; Step `start-at` for next page.
-          (setf max-results (gethash "maxResults" response))
-          (setf start-at (+ (gethash "startAt" response)
-                            max-results)))))))
+          ;; Set `next-page-token` for next page.
+          (setf next-page-token (gethash "nextPageToken" response)))))))
 
-(defun fetch-issues (endpoint jql start-at &key basic-auth-token)
+(defun fetch-issues (endpoint jql next-page-token &key basic-auth-token)
   (jzon:parse
     (dex:post (format nil "https://~A/rest/api/3/search/jql" endpoint)
               :content
@@ -103,7 +94,7 @@
                                "creator"
                                "reporter"))
                   ;; TODO: Freaking nextPageToken
-                  (:|startAt| . ,start-at)))
+                  (:|nextPageToken| . ,next-page-token)))
               :headers `((:content-type . "application/json")
                          (:authorization
                           . ,(format nil "Basic ~A" basic-auth-token))))))
