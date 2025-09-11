@@ -90,7 +90,7 @@
 
 (defun fetch-issues (endpoint jql start-at &key basic-auth-token)
   (jzon:parse
-    (dex:post (format nil "https://~A/rest/api/3/search" endpoint)
+    (dex:post (format nil "https://~A/rest/api/3/search/jql" endpoint)
               :content
               (jzon:stringify
                 `((:jql . ,jql)
