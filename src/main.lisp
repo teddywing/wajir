@@ -52,7 +52,7 @@
                                     (token config)))))
 
     (loop
-      with next-page-token = nil
+      with next-page-token = 'null
       do
       (progn
         (let* ((response (fetch-issues
@@ -61,19 +61,22 @@
                            next-page-token
                            :basic-auth-token basic-auth-token)))
 
-          (when (verbose config)
+          (when t ;(verbose config)
+            (loop for issue
+                  across (gethash "issues" response)
+                  do (format t "issue: ~A~%" issue))
             (format t "next-page-token: ~A~%" next-page-token))
 
           ;; Watch each issue.
-          (loop for issue
-                across (gethash "issues" response)
-                do (watch-issue
-                     config
-                     issue
-                     :basic-auth-token basic-auth-token))
+          ; (loop for issue
+          ;       across (gethash "issues" response)
+          ;       do (watch-issue
+          ;            config
+          ;            issue
+          ;            :basic-auth-token basic-auth-token))
 
           ;; Stop looping if we're on the last page of results.
-          (when (gethash "isLast")
+          (when (gethash "isLast" response)
             (return))
 
           ;; Set `next-page-token` for next page.
@@ -85,6 +88,7 @@
               :content
               (jzon:stringify
                 `((:jql . ,jql)
+                  (:|maxResults| . 5)
                   (:fields . #("id"
                                "key"
                                "project"
