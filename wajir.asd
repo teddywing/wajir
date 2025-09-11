@@ -27,7 +27,7 @@
     :inherit-configuration))
 
 (asdf:defsystem wajir
-  :version "0.0.2-beta1"
+  :version "0.0.2-beta2"
   :depends-on (:cl-base64
                :cl-smtp
                :com.inuoe.jzon
