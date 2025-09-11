@@ -61,19 +61,16 @@
                            next-page-token
                            :basic-auth-token basic-auth-token)))
 
-          (when t ;(verbose config)
-            (loop for issue
-                  across (gethash "issues" response)
-                  do (format t "issue: ~A~%" issue))
+          (when (verbose config)
             (format t "next-page-token: ~A~%" next-page-token))
 
           ;; Watch each issue.
-          ; (loop for issue
-          ;       across (gethash "issues" response)
-          ;       do (watch-issue
-          ;            config
-          ;            issue
-          ;            :basic-auth-token basic-auth-token))
+          (loop for issue
+                across (gethash "issues" response)
+                do (watch-issue
+                     config
+                     issue
+                     :basic-auth-token basic-auth-token))
 
           ;; Stop looping if we're on the last page of results.
           (when (gethash "isLast" response)
