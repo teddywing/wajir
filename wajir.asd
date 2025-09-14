@@ -29,9 +29,11 @@
 (asdf:defsystem wajir
   :version "0.0.2-beta3"
   :depends-on (:cl-base64
+               :cl-ppcre
                :cl-smtp
                :com.inuoe.jzon
                :dexador
+               :html2text
                :sysexits
                :unix-opts
                :with-user-abort)

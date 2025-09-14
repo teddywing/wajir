@@ -65,21 +65,12 @@
             (format t "next-page-token: ~A~%" next-page-token))
 
           ; ;; Watch each issue.
-          ; (loop for issue
-          ;       across (gethash "issues" response)
-          ;       do (watch-issue
-          ;            config
-          ;            issue
-          ;            :basic-auth-token basic-auth-token))
-          (format t "Response: ~A~%" response)
           (loop for issue
                 across (gethash "issues" response)
-                do (let ((tmp (html2text:html2text (cl-ppcre:regex-replace-all "<a name=\"[^\"]*\"></a>" (gethash "description"
-                                                                                                                 (gethash "renderedFields" issue)) ""))))
-                     ; (break)
-                     (format t "~A~%" tmp)))
-
-          (return)
+                do (watch-issue
+                     config
+                     issue
+                     :basic-auth-token basic-auth-token))
 
           ;; Stop looping if we're on the last page of results.
           (when (gethash "isLast" response)
@@ -94,18 +85,15 @@
               :content
               (jzon:stringify
                 `((:jql . ,jql)
-                  (:|maxResults| . 1) ;; TODO: This is for debugging only.
                   (:expand . "renderedFields")
                   (:fields . #("id"
                                "key"
                                "project"
                                "summary"
                                "description"
-                               ;; "renderedFields" ;; TODO: confirm
                                "issuetype"
                                "creator"
                                "reporter"))
-                  ;; TODO: Freaking nextPageToken
                   (:|nextPageToken| . ,next-page-token)))
               :headers `((:content-type . "application/json")
                          (:authorization

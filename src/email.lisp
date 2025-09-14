@@ -60,4 +60,15 @@
                      (gethash "issuetype" fields))
             (gethash "displayName"
                      (gethash "reporter" fields))
-            (gethash "description" fields))))
+            (extract-description issue))))
+
+(defun extract-description (issue)
+  (html2text:html2text
+    (description-clean-anchors
+      (gethash
+        "description"
+        (gethash "renderedFields" issue)))))
+
+(defun description-clean-anchors (description)
+  (cl-ppcre:regex-replace-all
+    "<a name=\"[^\"]*\"></a>" description ""))
