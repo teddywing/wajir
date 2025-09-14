@@ -64,13 +64,19 @@
           (when (verbose config)
             (format t "next-page-token: ~A~%" next-page-token))
 
-          ;; Watch each issue.
+          ; ;; Watch each issue.
+          ; (loop for issue
+          ;       across (gethash "issues" response)
+          ;       do (watch-issue
+          ;            config
+          ;            issue
+          ;            :basic-auth-token basic-auth-token))
+          (format t "~A~%" response)
           (loop for issue
                 across (gethash "issues" response)
-                do (watch-issue
-                     config
-                     issue
-                     :basic-auth-token basic-auth-token))
+                do (format t "~A~%" (html2text:html2text (gethash "description"
+                                                                  (gethash "renderedFields" issue)))) (format t "~A~%" (gethash "description"
+                                     (gethash "renderedFields" issue))))
 
           ;; Stop looping if we're on the last page of results.
           (when (gethash "isLast" response)
@@ -85,12 +91,14 @@
               :content
               (jzon:stringify
                 `((:jql . ,jql)
-                  (:|maxResults| . 5)
+                  (:|maxResults| . 1) ;; TODO: This is for debugging only.
+                  (:expand . "renderedFields")
                   (:fields . #("id"
                                "key"
                                "project"
                                "summary"
                                "description"
+                               ;; "renderedFields" ;; TODO: confirm
                                "issuetype"
                                "creator"
                                "reporter"))
