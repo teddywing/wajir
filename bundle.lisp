@@ -4,6 +4,7 @@
                       (asdf:system-depends-on (asdf:find-system :wajir))
                       (asdf:system-depends-on (asdf:find-system :com.inuoe.jzon))))
       (local-dependencies '("com.inuoe.jzon"
+                            "html2text"
                             "sysexits")))
   (ql:bundle-systems
     (set-difference
