@@ -64,7 +64,7 @@
           (when (verbose config)
             (format t "next-page-token: ~A~%" next-page-token))
 
-          ; ;; Watch each issue.
+          ;; Watch each issue.
           (loop for issue
                 across (gethash "issues" response)
                 do (watch-issue
