@@ -79,9 +79,10 @@
           ;; Set `next-page-token` for next page.
           (setf next-page-token (gethash "nextPageToken" response)))))))
 
+
 (defun fetch-issues (endpoint jql next-page-token &key basic-auth-token)
-  (handler-case
-      (jzon:parse
+  (jzon:parse
+    (handler-case
         (dex:post (format nil "https://~A/rest/api/3/search/jql" endpoint)
                   :content
                   (jzon:stringify
@@ -98,11 +99,9 @@
                       (:|nextPageToken| . ,next-page-token)))
                   :headers `((:content-type . "application/json")
                              (:authorization
-                              . ,(format nil "Basic ~A" basic-auth-token)))))
-    (dex:http-request-failed (e)
-      (format *error-output* "error: Jira search request failed ~D: ~A~%"
-              (dex:response-status e)
-              (dex:response-body e)))))
+                              . ,(format nil "Basic ~A" basic-auth-token))))
+      (dex:http-request-failed (e)
+        (exit-with-error e sysexits:+unavailable+)))))
 
 (defun watch-issue (config issue &key basic-auth-token)
   ;; 1. Watch issue in Jira
@@ -128,6 +127,4 @@
                 (gethash "id" issue))
         :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token))))
     (dex:http-request-failed (e)
-      (format *error-output* "error: Jira watch request failed ~D: ~A~%"
-              (dex:response-status e)
-              (dex:response-body e)))))
+      (exit-with-error e sysexits:+unavailable+))))
