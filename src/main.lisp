@@ -82,26 +82,27 @@
 
 (defun fetch-issues (endpoint jql next-page-token &key basic-auth-token)
   (jzon:parse
-    (handler-case
-        (dex:post (format nil "https://~A/rest/api/3/search/jql" endpoint)
-                  :content
-                  (jzon:stringify
-                    `((:jql . ,jql)
-                      (:expand . "renderedFields")
-                      (:fields . #("id"
-                                   "key"
-                                   "project"
-                                   "summary"
-                                   "description"
-                                   "issuetype"
-                                   "creator"
-                                   "reporter"))
-                      (:|nextPageToken| . ,next-page-token)))
-                  :headers `((:content-type . "application/json")
-                             (:authorization
-                              . ,(format nil "Basic ~A" basic-auth-token))))
-      (dex:http-request-failed (e)
-        (exit-with-error e sysexits:+unavailable+)))))
+    (handler-bind
+        ((dex:http-request-bad-request #'http-exit-on-error)
+         (dex:http-request-failed #'http-exit-on-error))
+
+      (dex:post (format nil "https://~A/rest/api/3/search/jql" endpoint)
+                :content
+                (jzon:stringify
+                  `((:jql . ,jql)
+                    (:expand . "renderedFields")
+                    (:fields . #("id"
+                                 "key"
+                                 "project"
+                                 "summary"
+                                 "description"
+                                 "issuetype"
+                                 "creator"
+                                 "reporter"))
+                    (:|nextPageToken| . ,next-page-token)))
+                :headers `((:content-type . "application/json")
+                           (:authorization
+                            . ,(format nil "Basic ~A" basic-auth-token)))))))
 
 (defun watch-issue (config issue &key basic-auth-token)
   ;; 1. Watch issue in Jira
@@ -119,12 +120,16 @@
 
 (defun add-watcher (endpoint issue &key basic-auth-token)
   "Add the authenticated user as a watcher to issue."
-  (handler-case
-      (dex:post
-        (format nil
-                "https://~A/rest/api/3/issue/~A/watchers"
-                endpoint
-                (gethash "id" issue))
-        :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token))))
-    (dex:http-request-failed (e)
-      (exit-with-error e sysexits:+unavailable+))))
+  (handler-bind
+      ((dex:http-request-bad-request #'http-exit-on-error)
+       (dex:http-request-failed #'http-exit-on-error))
+
+    (dex:post
+      (format nil
+              "https://~A/rest/api/3/issue/~A/watchers"
+              endpoint
+              (gethash "id" issue))
+      :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token))))))
+
+(defun http-exit-on-error (e)
+  (exit-with-error e sysexits:+unavailable+))
