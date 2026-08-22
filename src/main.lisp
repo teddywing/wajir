@@ -76,7 +76,7 @@
           ;; then make a request that does respond 401 when invalid
           ;; authentication data is given.
           (when
-              (null (gethash "issues" response))
+              (= 0 (length (gethash "issues" response)))
             (unless (jira-is-authenticated-p
                       (endpoint config)
                       :basic-auth-token basic-auth-token)
