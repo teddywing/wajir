@@ -64,6 +64,27 @@
           (when (verbose config)
             (format t "next-page-token: ~A~%" next-page-token))
 
+          ;; When unauthenticated, the '/rest/api/3/search/jql' responds 200
+          ;; with an empty list of "issues"
+          ;; ("{\"issues\":[],\"isLast\":true}").
+          ;;
+          ;; To find out the difference between:
+          ;;
+          ;; 1. Authenticated, no issues found, or
+          ;; 2. Not authenticated
+          ;;
+          ;; then make a request that does respond 401 when invalid
+          ;; authentication data is given.
+          (when
+              (null (gethash "issues" response))
+            (unless (jira-is-authenticated-p
+                      (endpoint config)
+                      :basic-auth-token basic-auth-token)
+
+              (format *error-output* "error: unauthorized~%")
+
+              (opts:exit sysexits:+noperm+)))
+
           ;; Watch each issue.
           (loop for issue
                 across (gethash "issues" response)
@@ -103,6 +124,17 @@
                 :headers `((:content-type . "application/json")
                            (:authorization
                             . ,(format nil "Basic ~A" basic-auth-token)))))))
+
+(defun jira-is-authenticated-p (endpoint &key basic-auth-token)
+  (handler-case
+    (when
+        (dex:get (format nil "https://~A/rest/api/3/myself" endpoint)
+                 :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token))))
+      t)
+
+    (dex:http-request-bad-request (e) (http-exit-on-error e))
+    (dex:http-request-unauthorized () nil)
+    (dex:http-request-failed (e) (http-exit-on-error e))))
 
 (defun watch-issue (config issue &key basic-auth-token)
   ;; 1. Watch issue in Jira
