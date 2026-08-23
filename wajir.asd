@@ -32,7 +32,6 @@
                :cl-ppcre
                :com.inuoe.jzon
                :dexador
-               :html2text
                :sysexits
                :unix-opts
                :with-user-abort
@@ -40,7 +39,18 @@
                ;; This cl-smtp dependency isn't packaged in the bundle unless
                ;; it's declared here.
                :cl-smtp
-               :frugal-uuid/non-frugal)
+               :frugal-uuid/non-frugal
+
+               ;; html2text and its transitive dependencies.
+               ;;
+               ;; I couldn't figure out how to get its dependencies in the
+               ;; Wajir bundle since it uses ASDF `:class
+               ;; :package-inferred-system` and doesn't declare its
+               ;; dependencies in `defsystem`.
+               :html2text
+               :log4cl
+               :plump
+               :str)
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")
