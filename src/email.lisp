@@ -1,4 +1,4 @@
-;;; Copyright (c) 2022  Teddy Wing
+;;; Copyright (c) 2022, 2025  Teddy Wing
 ;;;
 ;;; This file is part of Wajir.
 ;;;
