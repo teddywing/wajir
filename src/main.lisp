@@ -52,23 +52,38 @@
                                     (token config)))))
 
     (loop
-      with start-at = 0
-      with max-results = 0
+      with next-page-token = 'null
       do
       (progn
         (let* ((response (fetch-issues
                            (endpoint config)
                            (jql config)
-                           start-at
-                           :basic-auth-token basic-auth-token))
-
-               (total (gethash "total" response)))
+                           next-page-token
+                           :basic-auth-token basic-auth-token)))
 
           (when (verbose config)
-            (format t "start-at: ~A max-results: ~A total: ~A~%"
-                    start-at
-                    max-results
-                    total))
+            (format t "next-page-token: ~A~%" next-page-token))
+
+          ;; When unauthenticated, the '/rest/api/3/search/jql' responds 200
+          ;; with an empty list of "issues"
+          ;; ("{\"issues\":[],\"isLast\":true}").
+          ;;
+          ;; To find out the difference between:
+          ;;
+          ;; 1. Authenticated, no issues found, or
+          ;; 2. Not authenticated
+          ;;
+          ;; then make a request that does respond 401 when invalid
+          ;; authentication data is given.
+          (when
+              (= 0 (length (gethash "issues" response)))
+            (unless (jira-is-authenticated-p
+                      (endpoint config)
+                      :basic-auth-token basic-auth-token)
+
+              (format *error-output* "error: unauthorized~%")
+
+              (opts:exit sysexits:+noperm+)))
 
           ;; Watch each issue.
           (loop for issue
@@ -79,33 +94,47 @@
                      :basic-auth-token basic-auth-token))
 
           ;; Stop looping if we're on the last page of results.
-          (when (> start-at
-                   (- total max-results))
+          (when (gethash "isLast" response)
             (return))
 
-          ;; Step `start-at` for next page.
-          (setf max-results (gethash "maxResults" response))
-          (setf start-at (+ (gethash "startAt" response)
-                            max-results)))))))
+          ;; Set `next-page-token` for next page.
+          (setf next-page-token (gethash "nextPageToken" response)))))))
 
-(defun fetch-issues (endpoint jql start-at &key basic-auth-token)
+
+(defun fetch-issues (endpoint jql next-page-token &key basic-auth-token)
   (jzon:parse
-    (dex:post (format nil "https://~A/rest/api/2/search" endpoint)
-              :content
-              (jzon:stringify
-                `((:jql . ,jql)
-                  (:fields . #("id"
-                               "key"
-                               "project"
-                               "summary"
-                               "description"
-                               "issuetype"
-                               "creator"
-                               "reporter"))
-                  (:|startAt| . ,start-at)))
-              :headers `((:content-type . "application/json")
-                         (:authorization
-                          . ,(format nil "Basic ~A" basic-auth-token))))))
+    (handler-bind
+        ((dex:http-request-bad-request #'http-exit-on-error)
+         (dex:http-request-failed #'http-exit-on-error))
+
+      (dex:post (format nil "https://~A/rest/api/3/search/jql" endpoint)
+                :content
+                (jzon:stringify
+                  `((:jql . ,jql)
+                    (:expand . "renderedFields")
+                    (:fields . #("id"
+                                 "key"
+                                 "project"
+                                 "summary"
+                                 "description"
+                                 "issuetype"
+                                 "creator"
+                                 "reporter"))
+                    (:|nextPageToken| . ,next-page-token)))
+                :headers `((:content-type . "application/json")
+                           (:authorization
+                            . ,(format nil "Basic ~A" basic-auth-token)))))))
+
+(defun jira-is-authenticated-p (endpoint &key basic-auth-token)
+  (handler-case
+    (when
+        (dex:get (format nil "https://~A/rest/api/3/myself" endpoint)
+                 :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token))))
+      t)
+
+    (dex:http-request-bad-request (e) (http-exit-on-error e))
+    (dex:http-request-unauthorized () nil)
+    (dex:http-request-failed (e) (http-exit-on-error e))))
 
 (defun watch-issue (config issue &key basic-auth-token)
   ;; 1. Watch issue in Jira
@@ -123,9 +152,16 @@
 
 (defun add-watcher (endpoint issue &key basic-auth-token)
   "Add the authenticated user as a watcher to issue."
-  (dex:post
-    (format nil
-            "https://~A/rest/api/2/issue/~A/watchers"
-            endpoint
-            (gethash "id" issue))
-    :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token)))))
+  (handler-bind
+      ((dex:http-request-bad-request #'http-exit-on-error)
+       (dex:http-request-failed #'http-exit-on-error))
+
+    (dex:post
+      (format nil
+              "https://~A/rest/api/3/issue/~A/watchers"
+              endpoint
+              (gethash "id" issue))
+      :headers `((:authorization . ,(format nil "Basic ~A" basic-auth-token))))))
+
+(defun http-exit-on-error (e)
+  (exit-with-error e sysexits:+unavailable+))

@@ -4,3 +4,6 @@
 [submodule "lib/sysexits"]
 	path = lib/sysexits
 	url = https://github.com/teddywing/cl-sysexits.git
+[submodule "lib/html2text"]
+	path = lib/html2text
+	url = https://github.com/40ants/html2text.git
