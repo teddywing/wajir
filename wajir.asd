@@ -27,7 +27,7 @@
     :inherit-configuration))
 
 (asdf:defsystem wajir
-  :version "0.0.2-beta8"
+  :version "0.1.0"
   :depends-on (:cl-base64
                :cl-ppcre
                :cl-smtp

@@ -1,0 +1,17 @@
+CHANGELOG
+=========
+
+v0.1.0 (2026-08-23):
+	Fixes:
+
+	* Switch from the deactivated Jira "/rest/api/2/search" API to
+	  "/rest/api/3/search/jql".
+
+	Changes:
+
+	* Print Jira API errors on the console.
+
+v0.0.1 (2022-05-22):
+	First release.
+
+ vim:tw=80:comments=:fo+=n:formatlistpat=^\\s*\\*\\s*
