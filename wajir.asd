@@ -30,13 +30,17 @@
   :version "0.1.0"
   :depends-on (:cl-base64
                :cl-ppcre
-               :cl-smtp
                :com.inuoe.jzon
                :dexador
                :html2text
                :sysexits
                :unix-opts
-               :with-user-abort)
+               :with-user-abort
+
+               ;; This cl-smtp dependency isn't packaged in the bundle unless
+               ;; it's declared here.
+               :cl-smtp
+               :frugal-uuid/non-frugal)
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")
