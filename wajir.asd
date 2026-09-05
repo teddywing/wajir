@@ -27,7 +27,7 @@
     :inherit-configuration))
 
 (asdf:defsystem wajir
-  :version "0.1.0"
+  :version "0.1.1"
   :depends-on (:cl-base64
                :cl-ppcre
                :com.inuoe.jzon

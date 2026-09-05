@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+v0.1.1 (2026-09-05):
+	Fixes:
+
+	* After adding a dependency on 'html2text' and updating to Quicklisp
+	  v2026-01-01, some transitive dependencies could not be resolved, and were
+	  not bundled into the release package. This rendered the v0.1.0 release
+	  tarball impossible to build by package managers. Include the dependencies
+	  missing from v0.1.0 in the release package.
+
 v0.1.0 (2026-08-23):
 	Fixes:
 
