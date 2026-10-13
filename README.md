@@ -44,6 +44,17 @@ repository]:
 	$ make build
 
 
+## Package
+
+	$ rm -rf bundle/
+	$ make bundle
+	$ make pkg
+
+To build a binary from the bundle:
+
+	$ make bundle/bundled-local-projects/0000/wajir/wajir
+
+
 ## License
 Copyright © 2022 Teddy Wing. Licensed under the GNU GPLv3+ (see the included
 COPYING file).
